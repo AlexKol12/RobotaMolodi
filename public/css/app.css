@@ -6360,7 +6360,7 @@ label,
 /********FOOTER********/
 .footer{
   font-family: SegoeUIRegular;
-  overflow:hidden;
+  /*overflow:hidden;*/
   position: absolute;
   bottom: 0;
   left: 0;
