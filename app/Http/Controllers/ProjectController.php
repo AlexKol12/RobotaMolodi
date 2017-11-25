@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
+use App\Models\User;
 
 class ProjectController extends Controller
 {
@@ -27,7 +28,8 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('project.create');
+        $project = new Project();
+        return view('project.create', ['project' => $project]);
     }
 
     /**
@@ -48,8 +50,7 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        $project = Project::find(1);
-        dd($project);
+        $project = Project::find($id);
 
         return view('project.show', ['project' => $project]);
     }
@@ -62,7 +63,8 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        $project = Project::find(1);
+        $project = Project::find($id);
+
         return view('project.edit', ['project' => $project]);
     }
 
@@ -85,6 +87,6 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Project::delete($id);
     }
 }
