@@ -4,13 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\Industry;
+use App\Models\ProjectDescription;
 
 class ProjectController extends Controller
 {
+    /**
+    * Instantiate a new UserController instance.
+    *
+    * @return void
+    */
+    public function __construct()
+    {
+       $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -28,8 +38,21 @@ class ProjectController extends Controller
      */
     public function create()
     {
+        $data = [];
+
         $project = new Project();
-        return view('project.create', ['project' => $project]);
+
+        $data['project'] = $project;
+
+        $industries = Industry::all(['id','name']);
+
+        $preparedForSelect2 = [];
+        foreach($industries as $i){
+            $preparedForSelect2[$i['id']] = $i['name'];
+        }
+        $data['industries'] = $preparedForSelect2;
+
+        return view('project.create', $data);
     }
 
     /**
@@ -37,9 +60,22 @@ class ProjectController extends Controller
      *
      * @return Response
      */
-    public function store()
+    public function store(Request $request)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|max:255',
+            'brand' => 'required|max:255',
+            'location' => 'required|max:255',
+            'logo' => 'required|image',
+        ]);
+
+        $industry = Industry::find($request['industry_id']);
+        $project = $industry->projects()->create($request->all());
+
+        $pd = new ProjectDescription($request->all());
+        $pd['project_id'] = $project->id;
+        $pd->save();
+
     }
 
     /**

@@ -14,9 +14,12 @@ class CreateProjectsTable extends Migration
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->text('about');
-            $table->timestamps();
+            $table->integer('industry_id')->nullable();
+            $table->string('name')->default('Name Project');
+            $table->string('brand')->default('Brand Project');
+            $table->string('location')->default('Kiev');
+            $table->string('logo')->default('logo.png');
+            $table->nullableTimestamps();
         });
     }
 
